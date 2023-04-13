@@ -1,4 +1,7 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
+from injector import Binder, Injector, InstanceProvider, singleton
+
+from ...services import UserService
 
 router = APIRouter(
     tags=["health"],
@@ -14,5 +17,7 @@ async def signin() -> dict:
 
 
 @router.get("/healthz")
-async def signin() -> dict:
+async def healthz(request: Request) -> dict:
+    user_service = request.app.state.injector.get(UserService)
+
     return {"status": "ok"}

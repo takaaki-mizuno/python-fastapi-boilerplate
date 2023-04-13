@@ -8,7 +8,7 @@ Create Date: 2023-04-12 21:13:39.478384
 from alembic import op
 import sqlalchemy
 from app.models.types.uuid import UUID
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, text
 
 # revision identifiers, used by Alembic.
 revision = '7a1cbf774557'
@@ -20,7 +20,7 @@ depends_on = None
 def upgrade() -> None:
     op.create_table(
         'users',
-        sqlalchemy.Column('id', UUID, primary_key=True),
+        sqlalchemy.Column('id', UUID, primary_key=True, server_default=text('gen_random_uuid()')),
         sqlalchemy.Column('name', sqlalchemy.Text, nullable=False),
         sqlalchemy.Column('email', sqlalchemy.Text, nullable=False),
         sqlalchemy.Column('password', sqlalchemy.Text, nullable=False),

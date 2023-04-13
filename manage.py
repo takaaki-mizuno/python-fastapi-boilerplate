@@ -1,4 +1,5 @@
 import click
+from database.seeds import seed as seeder
 
 
 @click.group()
@@ -11,9 +12,14 @@ def db():
     pass
 
 
-@db.group()
+@db.command()
 def migrate():
     click.echo('Initialized the database')
+
+
+@db.command()
+def seed():
+    seeder()
 
 
 @cli.command()

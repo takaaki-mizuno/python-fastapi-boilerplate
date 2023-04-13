@@ -20,5 +20,8 @@ class Config(BaseSettings):
     S3_REGION: str = os.getenv("S3_REGION", "")
     S3_BUCKET: str = os.getenv("S3_BUCKET", "")
 
+    JWT_SECRET: str = os.getenv("JWT_SECRET", "")
+    JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
+
 
 config = Config(_env_file='.env', _env_file_encoding='utf-8')

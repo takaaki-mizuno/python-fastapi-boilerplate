@@ -8,14 +8,11 @@ from ..repositories import UserRepository
 from ..services import UserService
 
 
-def build_container() -> None:
-    injector = Injector([configure])
-    injector.get(Config)
+def build_container() -> Injector:
+    return Injector(modules=[configure])
 
 
 def configure(binder: Binder):
-    injector = Injector()
-
     binder.bind(Config, to=config, scope=singleton)
 
     engine = create_engine(config.SQLALCHEMY_DATABASE_URI, echo=True)
@@ -23,16 +20,16 @@ def configure(binder: Binder):
                                    autoflush=False,
                                    bind=engine)
     db = scoped_session(session_factory)
-    binder.bind(scoped_session, db)
+    binder.bind(scoped_session, to=db)
 
     # Libraries
     _hash = Hash()
     binder.bind(Hash, to=_hash)
 
     # Repositories
-    user_repository = UserRepository(db=db)
+    user_repository = UserRepository(db)
     binder.bind(UserRepository, to=user_repository)
 
     # Services
-    user_service = UserService(user_repository=user_repository, _hash=_hash)
+    user_service = UserService(user_repository, _hash, config)
     binder.bind(UserService, to=user_service)
